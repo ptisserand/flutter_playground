@@ -14,10 +14,12 @@ class DownloadButton extends StatefulWidget {
     Key? key,
     required this.status,
     this.transitionDuration = const Duration(milliseconds: 5000),
+    this.progress = 0.0,
   }) : super(key: key);
 
   final DownloadStatus status;
   final Duration transitionDuration;
+  final double progress;
 
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
@@ -90,21 +92,42 @@ class _DownloadButtonState extends State<DownloadButton> {
         duration: widget.transitionDuration,
         opacity: _isDownloading || _isFetching ? 1.0 : 0.0,
         curve: Curves.ease,
-        child: _buildProgressIndicator(),
+        child: Stack(
+          children: [
+            _buildProgressIndicator(),
+            if (_isDownloading)
+              const Icon(
+                Icons.stop,
+                size: 14.0,
+                color: CupertinoColors.activeBlue,
+              )
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildProgressIndicator() {
     return AspectRatio(
-        aspectRatio: 1.0,
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.white.withOpacity(0.0),
-          valueColor: AlwaysStoppedAnimation(
-            CupertinoColors.lightBackgroundGray,
-          ),
-          strokeWidth: 2.0,
-          value: null,
-        ));
+      aspectRatio: 1.0,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: widget.progress),
+        duration: const Duration(milliseconds: 200),
+        builder: (BuildContext context, double progress, Widget? child) {
+          return CircularProgressIndicator(
+            backgroundColor: _isDownloading
+                ? CupertinoColors.lightBackgroundGray
+                : Colors.white.withOpacity(0.0),
+            valueColor: AlwaysStoppedAnimation(
+              _isFetching
+                  ? CupertinoColors.lightBackgroundGray
+                  : CupertinoColors.activeBlue,
+            ),
+            strokeWidth: 2.0,
+            value: _isFetching ? null : progress,
+          );
+        },
+      ),
+    );
   }
 }
