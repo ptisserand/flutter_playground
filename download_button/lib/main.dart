@@ -37,6 +37,7 @@ class _DownloadButtonState extends State<DownloadButton> {
         _buildButtonShape(
           child: _buildText(),
         ),
+        _buildDownloadingProgress(),
       ],
     );
   }
@@ -81,5 +82,29 @@ class _DownloadButtonState extends State<DownloadButton> {
         ),
       ),
     );
+  }
+
+  Widget _buildDownloadingProgress() {
+    return Positioned.fill(
+      child: AnimatedOpacity(
+        duration: widget.transitionDuration,
+        opacity: _isDownloading || _isFetching ? 1.0 : 0.0,
+        curve: Curves.ease,
+        child: _buildProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildProgressIndicator() {
+    return AspectRatio(
+        aspectRatio: 1.0,
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white.withOpacity(0.0),
+          valueColor: AlwaysStoppedAnimation(
+            CupertinoColors.lightBackgroundGray,
+          ),
+          strokeWidth: 2.0,
+          value: null,
+        ));
   }
 }
