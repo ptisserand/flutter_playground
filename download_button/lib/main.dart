@@ -32,8 +32,12 @@ class _DownloadButtonState extends State<DownloadButton> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildButtonShape(
-      child: SizedBox(),
+    return Stack(
+      children: [
+        _buildButtonShape(
+          child: _buildText(),
+        ),
+      ],
     );
   }
 
@@ -54,6 +58,28 @@ class _DownloadButtonState extends State<DownloadButton> {
               color: CupertinoColors.lightBackgroundGray,
             ),
       child: child,
+    );
+  }
+
+  Widget _buildText() {
+    final text = _isDownloaded ? 'OPEN' : 'GET';
+    final opacity = _isDownloading || _isFetching ? 0.0 : 1.0;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: AnimatedOpacity(
+        opacity: opacity,
+        duration: widget.transitionDuration,
+        curve: Curves.ease,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.button?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: CupertinoColors.activeBlue,
+              ),
+        ),
+      ),
     );
   }
 }
