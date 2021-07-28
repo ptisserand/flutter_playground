@@ -18,13 +18,25 @@ class ExampleCupertinoDownloadButton extends StatefulWidget {
 
 class _ExampleCupertinoDownloadButtonState
     extends State<ExampleCupertinoDownloadButton> {
-  late final DownloadController _downloadController;
+  late final List<DownloadController> _downloadControllers;
 
   @override
   void initState() {
     super.initState();
-    _downloadController =
-        SimulatedDownloadController(onOpenDownload: _openDownload);
+    _downloadControllers = List<DownloadController>.generate(
+      20,
+      (index) => SimulatedDownloadController(onOpenDownload: () {
+        _openDownload(index);
+      }),
+    );
+  }
+
+  void _openDownload(int index) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Open App ${index + 1}'),
+      ),
+    );
   }
 
   @override
@@ -33,38 +45,48 @@ class _ExampleCupertinoDownloadButtonState
       appBar: AppBar(
         title: const Text('Test download'),
       ),
-      body: Container(
-        margin: EdgeInsets.only(top: 10.0, left: 5.0, right: 20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Here we go"),
-            SizedBox(
-              width: 80,
-              //height: 30,
-              child: AnimatedBuilder(
-                animation: _downloadController,
-                builder: (context, child) {
-                  return DownloadButton(
-                    status: _downloadController.downloadStatus,
-                    onCancel: _downloadController.stopDownload,
-                    onDownload: _downloadController.startDownload,
-                    onOpen: _downloadController.openDownload,
-                    progress: _downloadController.progress,
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _buildList(),
     );
   }
 
-  void _openDownload() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Open App'),
+  Widget _buildList() {
+    return ListView.separated(
+      itemCount: _downloadControllers.length,
+      separatorBuilder: (context, index) => const Divider(),
+      itemBuilder: _buildListItem,
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, int index) {
+    final theme = Theme.of(context);
+    final downloadController = _downloadControllers[index];
+
+    return ListTile(
+      title: Text(
+        'App ${index + 1}',
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.headline6,
+      ),
+      subtitle: Text(
+        'order #${index + 1}',
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.caption,
+      ),
+      trailing: SizedBox(
+        width: 96.0,
+        //height: 30,
+        child: AnimatedBuilder(
+          animation: downloadController,
+          builder: (context, child) {
+            return DownloadButton(
+              status: downloadController.downloadStatus,
+              onCancel: downloadController.stopDownload,
+              onDownload: downloadController.startDownload,
+              onOpen: downloadController.openDownload,
+              progress: downloadController.progress,
+            );
+          },
+        ),
       ),
     );
   }
@@ -308,7 +330,7 @@ class DownloadButton extends StatelessWidget {
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0.0, end: progress),
         duration: const Duration(milliseconds: 200),
-        builder: (BuildContext context, double progress, Widget? child) {
+        builder: (context, progress, child) {
           return CircularProgressIndicator(
             backgroundColor: _isDownloading
                 ? CupertinoColors.lightBackgroundGray
