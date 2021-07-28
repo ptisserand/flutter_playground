@@ -13,11 +13,19 @@ class DownloadButton extends StatefulWidget {
   const DownloadButton({
     Key? key,
     required this.status,
+    required this.onDownload,
+    required this.onCancel,
+    required this.onOpen,
     this.transitionDuration = const Duration(milliseconds: 5000),
     this.progress = 0.0,
   }) : super(key: key);
 
   final DownloadStatus status;
+
+  final VoidCallback onDownload;
+  final VoidCallback onCancel;
+  final VoidCallback onOpen;
+
   final Duration transitionDuration;
   final double progress;
 
@@ -32,15 +40,35 @@ class _DownloadButtonState extends State<DownloadButton> {
 
   bool get _isDownloaded => widget.status == DownloadStatus.downloaded;
 
+  void _onPressed() {
+    switch (widget.status) {
+      case DownloadStatus.notDownloaded:
+        widget.onDownload();
+        break;
+      case DownloadStatus.fetchingDownload:
+        // do nothing
+        break;
+      case DownloadStatus.donwloading:
+        widget.onCancel();
+        break;
+      case DownloadStatus.downloaded:
+        widget.onOpen();
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _buildButtonShape(
-          child: _buildText(),
-        ),
-        _buildDownloadingProgress(),
-      ],
+    return GestureDetector(
+      onTap: _onPressed,
+      child: Stack(
+        children: [
+          _buildButtonShape(
+            child: _buildText(),
+          ),
+          _buildDownloadingProgress(),
+        ],
+      ),
     );
   }
 
