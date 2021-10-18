@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -22,10 +20,35 @@ class TestApp extends StatelessWidget {
   }
 }
 
-class TestHomePage extends StatelessWidget {
+class TestHomePage extends StatefulWidget {
   const TestHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
+
+  @override
+  State<TestHomePage> createState() => _TestHomePageState();
+}
+
+class _TestHomePageState extends State<TestHomePage> {
+  bool isRunning = false;
+
+  @override
+  void initState() {
+    isRunning = false;
+    super.initState();
+  }
+
+  void onStart() {
+    setState(() {
+      isRunning = true;
+    });
+  }
+
+  void onStop() {
+    setState(() {
+      isRunning = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +56,62 @@ class TestHomePage extends StatelessWidget {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(title),
+        title: Text(widget.title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text('Timer will be here'),
-            RoundButtonWidget(text: 'Start', color: Colors.green),
-            AnimatedRoundButtonWidget(text: 'Stop', width: 300),
+          children: <Widget>[
+            const Text('Timer will be here'),
+            isRunning
+                ? AnimatedRoundButtonWidget(
+                    text: 'Stop',
+                    width: 300,
+                    onPressed: onStop,
+                  )
+                : RoundButtonWidget(
+                    text: 'Start',
+                    onPressed: onStart,
+                    color: Colors.green,
+                  ),
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class StrokeText extends StatelessWidget {
+  final String text;
+  final double fontSize;
+  final double strokeWidth;
+
+  const StrokeText({
+    Key? key,
+    required this.text,
+    this.fontSize = 36,
+    this.strokeWidth = 3,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Text(text,
+            style: TextStyle(
+              fontSize: fontSize,
+              foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = strokeWidth,
+            )),
+        Text(text,
+            style: TextStyle(
+              fontSize: fontSize,
+              color: Colors.white,
+            )),
+      ],
     );
   }
 }
@@ -56,9 +121,11 @@ class RoundButtonWidget extends StatelessWidget {
   final double width;
   final double height;
   final Color color;
+  final VoidCallback onPressed;
 
   const RoundButtonWidget({
     Key? key,
+    required this.onPressed,
     required this.text,
     this.width = 200,
     this.height = 200,
@@ -70,12 +137,15 @@ class RoundButtonWidget extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(width: width, height: height),
       child: ElevatedButton(
-        onPressed: () {},
-        child: Text(text),
+        onPressed: onPressed,
+        child: StrokeText(text: text),
         style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          primary: color,
-        ),
+            shape: const CircleBorder(),
+            primary: color,
+            side: const BorderSide(
+              width: 5.0,
+              color: Colors.black,
+            )),
       ),
     );
   }
@@ -85,10 +155,12 @@ class AnimatedRoundButtonWidget extends StatefulWidget {
   final String text;
   final double width;
   final double height;
+  final VoidCallback onPressed;
 
   const AnimatedRoundButtonWidget({
     Key? key,
     required this.text,
+    required this.onPressed,
     this.width = 200,
     this.height = 200,
   }) : super(key: key);
@@ -112,8 +184,9 @@ class _AnimatedRoundButtonWidgetState extends State<AnimatedRoundButtonWidget>
   @override
   void initState() {
     super.initState();
+    _color = _firstColor;
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     _animationController.repeat(reverse: true);
     _animation = _colorTween.animate(_animationController)
       ..addListener(() {
@@ -129,6 +202,12 @@ class _AnimatedRoundButtonWidgetState extends State<AnimatedRoundButtonWidget>
     super.dispose();
   }
 
+  void pressed() async {
+    _animationController.stop();
+    // call parent
+    widget.onPressed();
+  }
+
   @override
   Widget build(BuildContext context) {
     return RoundButtonWidget(
@@ -136,6 +215,7 @@ class _AnimatedRoundButtonWidgetState extends State<AnimatedRoundButtonWidget>
       color: _color,
       width: widget.width,
       height: widget.height,
+      onPressed: pressed,
     );
   }
 }
