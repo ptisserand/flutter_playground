@@ -151,6 +151,34 @@ class RoundButtonWidget extends StatelessWidget {
   }
 }
 
+class AnimatedButtonWidget extends AnimatedWidget {
+  final String text;
+  final double width;
+  final double height;
+  final VoidCallback onPressed;
+
+  const AnimatedButtonWidget({
+    Key? key,
+    required Animation<Color?> animation,
+    required this.text,
+    required this.onPressed,
+    this.width = 200,
+    this.height = 200,
+  }) : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<Color?>;
+    return RoundButtonWidget(
+      text: text,
+      color: animation.value ?? Colors.redAccent,
+      width: width,
+      height: height,
+      onPressed: onPressed,
+    );
+  }
+}
+
 class AnimatedRoundButtonWidget extends StatefulWidget {
   final String text;
   final double width;
@@ -173,27 +201,20 @@ class AnimatedRoundButtonWidget extends StatefulWidget {
 class _AnimatedRoundButtonWidgetState extends State<AnimatedRoundButtonWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation _animation;
+  late Animation<Color?> _animation;
 
   static const Color _firstColor = Colors.redAccent;
   static const Color _secondColor = Color.fromARGB(255, 200, 128, 128);
   static final ColorTween _colorTween =
       ColorTween(begin: _firstColor, end: _secondColor);
-  late Color _color;
 
   @override
   void initState() {
     super.initState();
-    _color = _firstColor;
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _animationController.repeat(reverse: true);
-    _animation = _colorTween.animate(_animationController)
-      ..addListener(() {
-        setState(() {
-          _color = _animation.value;
-        });
-      });
+        AnimationController(vsync: this, duration: const Duration(seconds: 1))
+          ..repeat(reverse: true);
+    _animation = _colorTween.animate(_animationController);
   }
 
   @override
@@ -209,13 +230,11 @@ class _AnimatedRoundButtonWidgetState extends State<AnimatedRoundButtonWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return RoundButtonWidget(
-      text: widget.text,
-      color: _color,
-      width: widget.width,
-      height: widget.height,
-      onPressed: pressed,
-    );
-  }
+  Widget build(BuildContext context) => AnimatedButtonWidget(
+        text: widget.text,
+        width: widget.width,
+        height: widget.height,
+        onPressed: pressed,
+        animation: _animation,
+      );
 }
