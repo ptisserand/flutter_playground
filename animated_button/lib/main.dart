@@ -175,8 +175,8 @@ class _AnimatedRoundButtonWidgetState extends State<AnimatedRoundButtonWidget>
   late AnimationController _animationController;
   late Animation _animation;
 
-  static final Color _firstColor = Colors.redAccent;
-  static final Color _secondColor = Colors.grey;
+  static const Color _firstColor = Colors.redAccent;
+  static const Color _secondColor = Color.fromARGB(255, 200, 128, 128);
   static final ColorTween _colorTween =
       ColorTween(begin: _firstColor, end: _secondColor);
   late Color _color;
@@ -186,7 +186,7 @@ class _AnimatedRoundButtonWidgetState extends State<AnimatedRoundButtonWidget>
     super.initState();
     _color = _firstColor;
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     _animationController.repeat(reverse: true);
     _animation = _colorTween.animate(_animationController)
       ..addListener(() {
