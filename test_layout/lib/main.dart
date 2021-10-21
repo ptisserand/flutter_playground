@@ -14,13 +14,17 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => MountApp()));
+    });
     return Container(
         color: mainColor,
         child: Stack(
           children: [
-            Align(
+            const Align(
               alignment: Alignment.center,
-              child: const Icon(
+              child: Icon(
                 Icons.terrain,
                 color: Colors.white,
                 size: 90,
@@ -41,5 +45,16 @@ class SplashPage extends StatelessWidget {
             )
           ],
         ));
+  }
+}
+
+class MountApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('Welcome to Mounts of the World!'),
+      ),
+    );
   }
 }
