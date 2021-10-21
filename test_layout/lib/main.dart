@@ -75,7 +75,18 @@ class MountApp extends StatelessWidget {
           ),
         ],
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: Container(
+          padding: const EdgeInsets.all(30),
+          color: mainColor,
+          alignment: Alignment.bottomLeft,
+          child: const Icon(
+            Icons.terrain,
+            color: Colors.white,
+            size: 80,
+          ),
+        ),
+      ),
       body: Container(),
     );
   }
