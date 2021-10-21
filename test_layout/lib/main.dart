@@ -5,7 +5,7 @@ const Color mainColor = Color(0xFFFF5656);
 void main() {
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: true,
-    home: SplashPage(),
+    home: MountApp(), // SplashPage(),
   ));
 }
 
@@ -49,12 +49,34 @@ class SplashPage extends StatelessWidget {
 }
 
 class MountApp extends StatelessWidget {
+  const MountApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Welcome to Mounts of the World!'),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(
+          color: mainColor,
+        ),
+        title: const Center(
+          child: Icon(
+            Icons.terrain,
+            color: mainColor,
+            size: 40,
+          ),
+        ),
+        actions: [
+          const SizedBox(
+            width: 40,
+            height: 40,
+          ),
+        ],
       ),
+      drawer: Drawer(),
+      body: Container(),
     );
   }
 }
