@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 const Color mainColor = Color(0xFFFF5656);
 
@@ -37,6 +38,13 @@ final List<MountModel> mountItems = [
       description:
           'Popocatépetl is an active stratovolcano located in the states of Puebla, Morelos, and Mexico in central Mexico. It lies in the eastern half of the Trans-Mexican volcanic belt. At 5,426 m it is the second highest peak in Mexico, after Citlaltépetl at 5,636 m.',
       location: 'Mexico')
+];
+
+final List<CategoryModel> categories = [
+  CategoryModel(category: 'Mountain', icon: Icons.terrain),
+  CategoryModel(category: 'Forest', icon: Icons.park),
+  CategoryModel(category: 'Beach', icon: Icons.beach_access),
+  CategoryModel(category: 'Hiking', icon: Icons.directions_walk)
 ];
 
 void main() {
@@ -132,13 +140,14 @@ class MountApp extends StatelessWidget {
           Expanded(
             child: AppMountListView(),
           ),
+          AppCategoryList(),
         ],
       ),
     );
   }
 }
 
-// widgets
+//- WIDGETS
 class AppHeader extends StatelessWidget {
   const AppHeader({Key? key}) : super(key: key);
 
@@ -282,6 +291,72 @@ class AppMountListView extends StatelessWidget {
   }
 }
 
+class AppCategoryList extends StatelessWidget {
+  const AppCategoryList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('Category',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )),
+              Text('See more',
+                  style: TextStyle(
+                    color: mainColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  )),
+            ],
+          ),
+        ),
+        Container(
+          height: 100,
+          margin: const EdgeInsets.only(left: 10),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              CategoryModel currentCategory = categories[index];
+              return Container(
+                width: 100,
+                margin: const EdgeInsets.only(top: 10, right: 10),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border:
+                      Border.all(color: Colors.grey.withOpacity(0.2), width: 2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      currentCategory.icon,
+                      color: mainColor,
+                    ),
+                    Text(
+                      currentCategory.category,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 //- MODELS
 class MountModel {
   String path;
@@ -294,4 +369,11 @@ class MountModel {
     this.location = '',
     this.description = '',
   });
+}
+
+class CategoryModel {
+  String category;
+  IconData? icon;
+
+  CategoryModel({this.category = '', this.icon});
 }
