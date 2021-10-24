@@ -125,7 +125,8 @@ class DetailsPage extends StatelessWidget {
                         )
                       ],
                     ),
-                  )
+                  ),
+                  const DetailsBottomBar(),
                 ],
               ),
             ),
