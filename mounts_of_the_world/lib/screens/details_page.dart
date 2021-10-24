@@ -98,8 +98,34 @@ class DetailsPage extends StatelessWidget {
             ),
             Expanded(
               child: Column(
-                children: const [
-                  DetailsRatingBar(),
+                children: [
+                  const DetailsRatingBar(),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            'About ${selectedItem.name}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            selectedItem.description,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
