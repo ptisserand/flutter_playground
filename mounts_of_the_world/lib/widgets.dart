@@ -106,7 +106,7 @@ class AppMountListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -291,6 +291,58 @@ class _AppBottomBarState extends State<AppBottomBar> {
           }
           return barItemWidget;
         }),
+      ),
+    );
+  }
+}
+
+class DetailsRatingBar extends StatelessWidget {
+  const DetailsRatingBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var sampleRatingData = {
+      'Rating': '4.6',
+      'Price': '\$12',
+      'Open': '24hrs',
+    };
+    return Container(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(
+          sampleRatingData.entries.length,
+          (index) => Container(
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey.withOpacity(0.2),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  sampleRatingData.entries.elementAt(index).key,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  sampleRatingData.entries.elementAt(index).value,
+                  style: const TextStyle(
+                    color: mainColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
