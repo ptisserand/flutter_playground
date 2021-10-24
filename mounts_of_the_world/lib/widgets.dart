@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'globals.dart';
 import 'models.dart';
+import 'screens/details_page.dart';
 
 class AppHeader extends StatelessWidget {
   const AppHeader({Key? key}) : super(key: key);
@@ -113,32 +114,41 @@ class AppMountListView extends StatelessWidget {
         itemCount: mountItems.length,
         itemBuilder: (context, index) {
           MountModel currentMount = mountItems[index];
-          return Container(
-            alignment: Alignment.bottomLeft,
-            padding: const EdgeInsets.all(20),
-            margin: const EdgeInsets.all(10),
-            width: 150,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              image: DecorationImage(
-                image: NetworkImage(currentMount.path),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  currentMount.name,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DetailsPage(currentMount),
                 ),
-                Text(currentMount.location,
+              );
+            },
+            child: Container(
+              alignment: Alignment.bottomLeft,
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(10),
+              width: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                  image: NetworkImage(currentMount.path),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    currentMount.name,
                     style: const TextStyle(
-                      color: Colors.white,
-                    ))
-              ],
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  Text(currentMount.location,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ))
+                ],
+              ),
             ),
           );
         },
