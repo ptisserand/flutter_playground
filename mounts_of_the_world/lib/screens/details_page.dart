@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../globals.dart';
+import '../widgets.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({Key? key}) : super(key: key);
@@ -96,7 +97,11 @@ class DetailsPage extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Text("Bottom"),
+              child: Column(
+                children: const [
+                  DetailsRatingBar(),
+                ],
+              ),
             ),
           ],
         ));
