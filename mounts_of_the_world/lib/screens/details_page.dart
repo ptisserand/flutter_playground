@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mounts_of_the_world/models.dart';
 import '../globals.dart';
 import '../widgets.dart';
 
 class DetailsPage extends StatelessWidget {
-  const DetailsPage({Key? key}) : super(key: key);
+  MountModel mount;
+  DetailsPage(this.mount, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var selectedItem = mountItems[0];
+    var selectedItem = mount;
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
