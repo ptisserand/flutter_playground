@@ -1,9 +1,41 @@
 import 'package:flutter/material.dart';
 
+//-- GLOBALS --
 const Color mainYellow = Color(0xFFFFB02F);
 const Color primaryGray = Color(0xFF313131);
 const Color secondaryGray = Color(0xFF1C1C1C);
 const Color lightGray = Color(0xFF3B3B3B);
+
+final List<AttractionModel> attractions = [
+  AttractionModel(
+      imgPath:
+          'https://images.pexels.com/photos/260590/pexels-photo-260590.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
+      name: 'Golden Gate Bridge',
+      location: 'San Francisco, CA',
+      description:
+          'The Golden Gate Bridge is a suspension bridge spanning the Golden Gate, the one-mile-wide strait connecting San Francisco Bay and the Pacific Ocean.'),
+  AttractionModel(
+      imgPath:
+          'https://images.pexels.com/photos/5627275/pexels-photo-5627275.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
+      name: 'Brooklyn Bridge',
+      location: 'Brooklyn, NY',
+      description:
+          'The Golden Gate Bridge is a suspension bridge spanning the Golden Gate, the one-mile-wide strait connecting San Francisco Bay and the Pacific Ocean.'),
+  AttractionModel(
+      imgPath:
+          'https://images.pexels.com/photos/5241381/pexels-photo-5241381.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
+      name: 'London Bridge',
+      location: 'London, UK',
+      description:
+          'The Golden Gate Bridge is a suspension bridge spanning the Golden Gate, the one-mile-wide strait connecting San Francisco Bay and the Pacific Ocean.'),
+  AttractionModel(
+      imgPath:
+          'https://images.pexels.com/photos/1680247/pexels-photo-1680247.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+      name: 'Harbour Bridge',
+      location: 'Sydney, AU',
+      description:
+          'The Golden Gate Bridge is a suspension bridge spanning the Golden Gate, the one-mile-wide strait connecting San Francisco Bay and the Pacific Ocean.')
+];
 
 void main() {
   runApp(MaterialApp(
@@ -11,6 +43,7 @@ void main() {
   ));
 }
 
+//-- PAGES --
 class LandingPage extends StatelessWidget {
   const LandingPage({Key? key}) : super(key: key);
 
@@ -64,8 +97,9 @@ class LandingPage extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+          children: const [
             HeaderWidget(),
+            AttractionListView(),
           ],
         ),
       ),
@@ -73,7 +107,7 @@ class LandingPage extends StatelessWidget {
   }
 }
 
-//- WIDGETS
+//-- WIDGETS --
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({Key? key}) : super(key: key);
 
@@ -124,4 +158,102 @@ class HeaderWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+class AttractionCard extends StatelessWidget {
+  AttractionModel? attractionModel;
+
+  AttractionCard({Key? key, this.attractionModel}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 180,
+      margin: const EdgeInsets.all(10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(25),
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(attractionModel!.imgPath!),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.5),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    attractionModel!.name!,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(attractionModel!.location!,
+                      style: const TextStyle(
+                        color: mainYellow,
+                      ))
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AttractionListView extends StatelessWidget {
+  const AttractionListView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(left: 10),
+        scrollDirection: Axis.horizontal,
+        itemCount: attractions.length,
+        itemBuilder: (context, index) {
+          AttractionModel currentAttraction = attractions[index];
+          return AttractionCard(
+            attractionModel: currentAttraction,
+          );
+        },
+      ),
+    );
+  }
+}
+
+//-- MODELS --
+class AttractionModel {
+  String? imgPath;
+  String? name;
+  String? description;
+  String? location;
+
+  AttractionModel({
+    this.imgPath,
+    this.name,
+    this.location,
+    this.description,
+  });
 }
