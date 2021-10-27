@@ -39,7 +39,18 @@ class LandingPage extends StatelessWidget {
           ),
         ],
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: Container(
+          color: mainYellow,
+          alignment: Alignment.bottomLeft,
+          padding: const EdgeInsets.all(20),
+          child: const Icon(
+            Icons.airplanemode_on,
+            color: Colors.black,
+            size: 80,
+          ),
+        ),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
