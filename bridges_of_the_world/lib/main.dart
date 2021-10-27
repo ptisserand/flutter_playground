@@ -37,6 +37,12 @@ final List<AttractionModel> attractions = [
           'The Golden Gate Bridge is a suspension bridge spanning the Golden Gate, the one-mile-wide strait connecting San Francisco Bay and the Pacific Ocean.')
 ];
 
+final List<BottomBarModel> bottomBarListItems = [
+  BottomBarModel(icon: Icons.explore_outlined, isSelected: true),
+  BottomBarModel(icon: Icons.favorite_border, isSelected: false),
+  BottomBarModel(icon: Icons.comment_outlined, isSelected: false),
+  BottomBarModel(icon: Icons.account_circle_outlined, isSelected: false),
+];
 void main() {
   runApp(MaterialApp(
     home: LandingPage(),
@@ -100,6 +106,7 @@ class LandingPage extends StatelessWidget {
           children: const [
             HeaderWidget(),
             AttractionListView(),
+            BottomBarWidget(),
           ],
         ),
       ),
@@ -243,6 +250,42 @@ class AttractionListView extends StatelessWidget {
   }
 }
 
+class BottomBarWidget extends StatefulWidget {
+  const BottomBarWidget({Key? key}) : super(key: key);
+
+  @override
+  State<BottomBarWidget> createState() => _BottomBarWidgetState();
+}
+
+class _BottomBarWidgetState extends State<BottomBarWidget> {
+  List<BottomBarModel> _bottomBarItems = bottomBarListItems;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 20, bottom: 20),
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: List.generate(_bottomBarItems.length, (index) {
+          var barItem = _bottomBarItems[index];
+          return IconButton(
+              onPressed: () {
+                setState(() {
+                  for (var element in _bottomBarItems) {
+                    element.isSelected = element == barItem;
+                  }
+                });
+              },
+              icon: Icon(barItem.icon),
+              color: barItem.isSelected! ? mainYellow : Colors.white);
+        }),
+      ),
+    );
+  }
+}
+
 //-- MODELS --
 class AttractionModel {
   String? imgPath;
@@ -256,4 +299,11 @@ class AttractionModel {
     this.location,
     this.description,
   });
+}
+
+class BottomBarModel {
+  IconData? icon;
+  bool? isSelected;
+
+  BottomBarModel({this.icon, this.isSelected});
 }
