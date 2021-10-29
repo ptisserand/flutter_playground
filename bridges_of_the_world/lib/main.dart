@@ -45,7 +45,7 @@ final List<BottomBarModel> bottomBarListItems = [
 ];
 void main() {
   runApp(MaterialApp(
-    home: LandingPage(),
+    home: SplashPage(),
   ));
 }
 
@@ -214,6 +214,35 @@ class DetailsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SplashPage extends StatelessWidget {
+  const SplashPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Stack(
+      children: [
+        Container(color: mainYellow),
+        const Align(
+          alignment: Alignment.center,
+          child: Icon(Icons.airplanemode_on, color: Colors.black, size: 80),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: 160,
+            width: 160,
+            child: CircularProgressIndicator(
+              color: Colors.black.withOpacity(0.5),
+              strokeWidth: 10,
+            ),
+          ),
+        )
+      ],
+    ));
   }
 }
 
